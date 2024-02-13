@@ -1,10 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { createActionAuth } from '@octokit/auth-action'
-import { retry } from '@octokit/plugin-retry'
 
 import { START_TIME_VAR } from './const'
-import { Octokit } from 'octokit'
 
 export async function trackJob(
   startTime: number,
@@ -16,14 +13,7 @@ export async function trackJob(
   core.setSecret(tb_token)
   core.setSecret(gh_token)
 
-  const auth_promise = createActionAuth()
-  const auth = await auth_promise()
-
-  const MyOctoKit = Octokit.plugin(retry)
-
-  const octokit = new MyOctoKit({
-    auth
-  })
+  const octokit = github.getOctokit(gh_token)
 
   const job_name = github.context.job
   let job_id = ''

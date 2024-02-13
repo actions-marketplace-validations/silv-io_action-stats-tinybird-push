@@ -6,13 +6,13 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
 
 jobs:
   test-action:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
 
     steps:
       - name: Checkout
@@ -23,6 +23,6 @@ jobs:
         id: test-action
         uses: ./
         with:
-          github_token: "{{ secrets.GITHUB_TOKEN }}"
+          github_token: "{{ secrets.GH_TOKEN }}"
           tinybird_token: "token"
           tinybird_endpoint: "endpoint"
