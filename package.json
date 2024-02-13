@@ -1,16 +1,16 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
-  "version": "0.0.0",
+  "name": "tinybird-github-action-stats-push",
+  "description": "Send job duration statistics to tinybird",
+  "version": "0.1.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/silv-io/action-stats-tinybird-push",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/silv-io/action-stats-tinybird-push"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/silv-io/action-stats-tinybird-push/issues"
   },
   "keywords": [
     "actions",
@@ -25,15 +25,14 @@
   },
   "scripts": {
     "bundle": "npm run format:write && npm run package",
-    "ci-test": "jest",
-    "coverage": "make-coverage-badge --output-path ./badges/coverage.svg",
     "format:write": "prettier --write **/*.ts",
     "format:check": "prettier --check **/*.ts",
     "lint": "npx eslint . -c ./.github/linters/.eslintrc.yml",
-    "package": "ncc build src/index.ts --license licenses.txt",
+    "package": "npx concurrently -- \"npm run build-main\" \"npm run build-post\"",
+    "build-main": "ncc build src/main.ts --license licenses.txt -o main",
+    "build-post": "ncc build src/post.ts --license licenses.txt -o post",
     "package:watch": "npm run package -- --watch",
-    "test": "jest",
-    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
+    "all": "npm run format:write && npm run lint && npm run package"
   },
   "license": "MIT",
   "jest": {

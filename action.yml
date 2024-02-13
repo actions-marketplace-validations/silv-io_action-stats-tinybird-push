@@ -1,24 +1,22 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Tinybird Stats Push'
+description: 'Send job statistics to Tinybird'
+author: 'silv-io'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'rocket'
+  color: 'teal'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  tinybird_token:
+    description: 'The token to authenticate with Tinybird'
     required: true
-    default: '1000'
-
-# Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+  tinybird_endpoint:
+    description: 'The endpoint to send the data to'
+    required: true
 
 runs:
   using: node20
-  main: dist/index.js
+  main: main/index.js
+  post: post/index.js

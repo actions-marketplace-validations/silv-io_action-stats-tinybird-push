@@ -1,0 +1,1 @@
+export const START_TIME_VAR = 'JOB_START_TIME'
