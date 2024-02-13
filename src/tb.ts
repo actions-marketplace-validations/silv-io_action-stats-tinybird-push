@@ -24,15 +24,21 @@ export async function trackJob(
   const headers = new Headers()
   headers.append('Authorization', `Bearer ${tb_token}`)
 
-  fetch(tb_endpoint, {
+  core.info(
+    `Sending: ${JSON.stringify(tinybird_payload)} to ${tb_endpoint} with token ${tb_token}`
+  )
+  const response = await fetch(tb_endpoint, {
     method: 'POST',
     headers,
     body: JSON.stringify(tinybird_payload)
   })
-
-  core.info(
-    `Would send: ${JSON.stringify(tinybird_payload)} to ${tb_endpoint} with token ${tb_token}`
-  )
+  if (!response.ok) {
+    throw new Error(
+      `Tinybird API returned ${response.status}: ${response.statusText}`
+    )
+  }
+  const data = await response.json()
+  core.info(data)
 }
 
 export const getVarName = (): string => `STATE_${START_TIME_VAR}`
