@@ -9687,8 +9687,10 @@ async function trackJob(startTime, endTime) {
         commit: github.context.sha,
         branch: github.context.ref,
         job_name: github.context.job,
-        repository: github.context.repo.repo
+        repository: github.context.repo.repo,
+        attempt: parseInt(process.env.GITHUB_RUN_ATTEMPT, 10)
     };
+    core.info(`${JSON.stringify(process.env)}`);
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${tb_token}`);
     core.info(`Sending: ${JSON.stringify(tinybird_payload)} to ${tb_endpoint} with token ${tb_token}`);

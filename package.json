@@ -1,5 +1,5 @@
 {
-  "name": "tinybird-github-action-stats-push",
+  "name": "tb-gha-job-start-end",
   "description": "Send job duration statistics to tinybird",
   "version": "0.1.0",
   "author": "",

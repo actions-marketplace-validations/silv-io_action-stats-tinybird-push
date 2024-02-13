@@ -23,6 +23,6 @@ jobs:
         id: test-action
         uses: ./
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           tinybird_token: ${{ secrets.TB_TOKEN }}
           tinybird_endpoint: "https://api.tinybird.co/v0/events?name=ci_jobs_test"

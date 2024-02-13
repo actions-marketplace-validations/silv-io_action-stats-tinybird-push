@@ -1,17 +1,14 @@
-name: 'Tinybird Stats Push'
+name: 'Tinybird Github Job Start & End Push'
 description: 'Send job statistics to Tinybird'
 author: 'silv-io'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'rocket'
-  color: 'teal'
+  icon: 'upload-cloud'
+  color: 'purple'
 
 # Define your inputs here.
 inputs:
-  github_token:
-    description: 'The token to authenticate with GitHub'
-    required: true
   tinybird_token:
     description: 'The token to authenticate with Tinybird'
     required: true
