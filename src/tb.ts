@@ -1,7 +1,10 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { createActionAuth } from '@octokit/auth-action'
+import { retry } from '@octokit/plugin-retry'
 
 import { START_TIME_VAR } from './const'
+import { Octokit } from 'octokit'
 
 export async function trackJob(
   startTime: number,
@@ -13,16 +16,30 @@ export async function trackJob(
   core.setSecret(tb_token)
   core.setSecret(gh_token)
 
-  const octokit = github.getOctokit(gh_token)
+  const auth_promise = createActionAuth()
+  const auth = await auth_promise()
 
+  const MyOctoKit = Octokit.plugin(retry)
+
+  const octokit = new MyOctoKit({
+    auth
+  })
+
+  const job_name = github.context.job
+  let job_id = ''
+  let found = false
   const jobs = await octokit.request(
-    'GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs',
-    {
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
-      run_id: github.context.runId
-    }
+    `GET /repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}/jobs`
   )
+  for (const job of jobs.data.jobs) {
+    if (job.name === job_name) {
+      job_id = job.id
+      found = true
+    }
+  }
+  if (!found) {
+    core.setFailed(`Could not find job with name ${job_name}`)
+  }
 
   core.info(`Jobs: ${JSON.stringify(jobs)}`)
 
@@ -33,6 +50,7 @@ export async function trackJob(
     commit: github.context.sha,
     branch: github.context.ref,
     job_name: github.context.job,
+    job_id,
     repository: github.context.repo.repo
   }
 
