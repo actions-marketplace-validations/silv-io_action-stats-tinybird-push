@@ -10,17 +10,24 @@ export async function trackJob(
   const gh_token = core.getInput('github_token', { required: true })
   const tb_token = core.getInput('tinybird_token', { required: true })
   const tb_endpoint = core.getInput('tinybird_endpoint', { required: true })
-  core.setSecret(tb_token)
-  core.setSecret(gh_token)
 
-  const octokit = github.getOctokit(gh_token)
-
+  const url = `https://api.github.com/repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}/jobs`
   const job_name = github.context.job
+  const headers = new Headers()
+  headers.append('Authorization', `Bearer ${gh_token}`)
+  headers.append('Accept', 'application/vnd.github+json')
+  headers.append('User-Agent', 'tinybird-action')
+
+  core.info(`Fetching jobs from ${url}`)
+  const response = await fetch(url, { method: 'GET', headers })
+  if (!response.ok) {
+    core.setFailed(`Failed to fetch jobs: ${response.statusText}`)
+  }
+  const jobs = await response.json()
+  core.info(`Jobs: ${JSON.stringify(jobs)}`)
+
   let job_id = ''
   let found = false
-  const jobs = await octokit.request(
-    `GET /repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}/jobs`
-  )
   for (const job of jobs.data.jobs) {
     if (job.name === job_name) {
       job_id = job.id
