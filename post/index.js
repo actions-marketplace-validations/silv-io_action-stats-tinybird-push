@@ -9680,7 +9680,7 @@ async function trackJob(startTime, endTime) {
     const gh_token = core.getInput('github_token', { required: true });
     const tb_token = core.getInput('tinybird_token', { required: true });
     const tb_endpoint = core.getInput('tinybird_endpoint', { required: true });
-    const url = `https://api.github.com/repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}/jobs`;
+    const url = `https://api.github.com/repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/7889026160/jobs`;
     const job_name = github.context.job;
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${gh_token}`);
