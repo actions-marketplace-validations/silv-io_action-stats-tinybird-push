@@ -23,5 +23,6 @@ jobs:
         id: test-action
         uses: ./
         with:
+          github_token: "{{ secrets.GITHUB_TOKEN }}"
           tinybird_token: "token"
           tinybird_endpoint: "endpoint"

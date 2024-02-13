@@ -9,6 +9,9 @@ branding:
 
 # Define your inputs here.
 inputs:
+  github_token:
+    description: 'The token to authenticate with GitHub'
+    required: true
   tinybird_token:
     description: 'The token to authenticate with Tinybird'
     required: true
