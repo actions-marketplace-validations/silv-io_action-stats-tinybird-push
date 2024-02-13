@@ -9677,34 +9677,9 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const const_1 = __nccwpck_require__(8032);
 async function trackJob(startTime, endTime) {
-    const gh_token = core.getInput('github_token', { required: true });
     const tb_token = core.getInput('tinybird_token', { required: true });
     const tb_endpoint = core.getInput('tinybird_endpoint', { required: true });
-    const url = `https://api.github.com/repos/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/7889026160/jobs`;
-    const job_name = github.context.job;
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${gh_token}`);
-    headers.append('Accept', 'application/vnd.github+json');
-    headers.append('User-Agent', 'tinybird-action');
-    core.info(`Fetching jobs from ${url}`);
-    const response = await fetch(url, { method: 'GET', headers });
-    if (!response.ok) {
-        core.setFailed(`Failed to fetch jobs: ${response.statusText}`);
-    }
-    const jobs = await response.json();
-    core.info(`Jobs: ${JSON.stringify(jobs)}`);
-    let job_id = '';
-    let found = false;
-    for (const job of jobs.data.jobs) {
-        if (job.name === job_name) {
-            job_id = job.id;
-            found = true;
-        }
-    }
-    if (!found) {
-        core.setFailed(`Could not find job with name ${job_name}`);
-    }
-    core.info(`Jobs: ${JSON.stringify(jobs)}`);
+    core.setSecret(tb_token);
     const tinybird_payload = {
         run_id: github.context.runId,
         start: startTime,
@@ -9712,9 +9687,15 @@ async function trackJob(startTime, endTime) {
         commit: github.context.sha,
         branch: github.context.ref,
         job_name: github.context.job,
-        job_id,
         repository: github.context.repo.repo
     };
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${tb_token}`);
+    fetch(tb_endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(tinybird_payload)
+    });
     core.info(`Would send: ${JSON.stringify(tinybird_payload)} to ${tb_endpoint} with token ${tb_token}`);
 }
 exports.trackJob = trackJob;
