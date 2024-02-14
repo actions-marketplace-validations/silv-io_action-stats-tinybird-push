@@ -21,7 +21,6 @@ export async function trackJob(
     repository: github.context.repo.repo,
     attempt: parseInt(process.env.GITHUB_RUN_ATTEMPT as string, 10)
   }
-  core.info(`${JSON.stringify(process.env)}`)
 
   const headers = new Headers()
   headers.append('Authorization', `Bearer ${tb_token}`)
